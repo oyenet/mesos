@@ -394,11 +394,11 @@ Future<Nothing> Docker::run(
   argv.push_back("MESOS_SANDBOX=" + mappedDirectory);
 
   /* Start OYE adjustment */
-  bool isUseFlocker = false;
+  bool isCustomVolumeDriver = false;
 
   foreach (const Parameter& parameter, dockerInfo.parameters()) {
-    if ("volume-driver" == parameter.key() && "flocker" == parameter.value()) {
-      isUseFlocker = true;
+    if ("volume-driver" == parameter.key()) {
+      isCustomVolumeDriver = true;
     }
   }
   /* Finish OYE adjustment */
@@ -408,7 +408,7 @@ Future<Nothing> Docker::run(
     if (volume.has_host_path()) {
   /* Start OYE adjustment */
       //if (!strings::startsWith(volume.host_path(), "/")) {
-      if (!strings::startsWith(volume.host_path(), "/") && !isUseFlocker) {
+      if (!strings::startsWith(volume.host_path(), "/") && !isCustomVolumeDriver) {
   /* Finish OYE adjustment */
         // Support mapping relative paths from the sandbox.
         volumeConfig =
